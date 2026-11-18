@@ -27,15 +27,30 @@ Sowell and Apt, 2019).
 - Plan, pre-registered before any hourly data was read: [docs/temp-plan.md](docs/temp-plan.md)
   (seven predictions with probabilities, a placebo-temperature control and a no-named-storms check)
 - Core definitions: [outage/temp_core.py](outage/temp_core.py) (numpy; tests in
-  `outage/test_temp_core.py`). The data job is not written yet.
+  `outage/test_temp_core.py`). Data job: [outage/temp_job.py](outage/temp_job.py), with the choices the
+  plan left open fixed in advance in [docs/temp-job.md](docs/temp-job.md).
 - Results: `docs/temp.md`.
+
+**Stage 3, repeat-1:** do the same units fail storm after storm, and did that change after NERC's
+cold-weather standard EOP-012 took effect on 1 October 2024? For units that ran hard in two cold events,
+this compares the chance of tripping in the second event for units that tripped in the first against
+units that did not. The comparison is stratified by state, set against ordinary winter weeks, and made
+before the standard (Uri to Elliott) and after it (Elliott to January 2025 and the Winter 2026 storms).
+
+- Plan, pre-registered before any hourly data was read: [docs/repeat-plan.md](docs/repeat-plan.md)
+  (five predictions with probabilities)
+- Code: [outage/repeat_core.py](outage/repeat_core.py) (standard library; tests in
+  `outage/test_repeat_core.py`) and [outage/repeat_job.py](outage/repeat_job.py). The job reuses the
+  stage-1 trip rule unchanged.
+- Results: `docs/repeat.md`.
 
 Every prediction will be reported as held, failed or not scorable.
 
 Data: Catalyst Cooperative's [PUDL](https://catalyst.coop/pudl/) build of EPA CEMS and EIA-860 (CC BY 4.0);
 NOAA ISD-Lite station temperatures (AWS Open Data).
 
-Run the tests: `python outage/test_outage_core.py` and `python outage/test_temp_core.py` (needs `numpy`).
+Run the tests: `python outage/test_outage_core.py`, `python outage/test_repeat_core.py` and
+`python outage/test_temp_core.py` (needs `numpy`).
 Run the stage-1 job (needs `pyarrow`, `numpy` and internet):
 `python outage/outage_job.py --data-dir data --out-dir out`.
 
