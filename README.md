@@ -19,6 +19,18 @@ official FERC/NERC totals and against the same calendar weeks in ordinary years.
   `outage/test_outage_core.py`) and [outage/outage_job.py](outage/outage_job.py) (data job)
 - Results: `docs/outage.md`, once the job has run.
 
+**Check of stage 1, truth-1:** are the trips real? During Winter Storm Uri, Texas regulators made ERCOT
+publish every generator outage and derate, unit by unit. That list is the only public answer key. truth-1
+measures what share of the trips the stage-1 rule finds in Texas appear in ERCOT's list, and what share of
+ERCOT's full outages the rule finds, against a time-shifted placebo.
+
+- Plan, pre-registered before any CEMS data was read and before ERCOT's file was parsed:
+  [docs/truth-plan.md](docs/truth-plan.md) (four predictions with probabilities)
+- Code: [outage/truth_core.py](outage/truth_core.py) (standard library; tests in
+  `outage/test_truth_core.py`) and [outage/truth_job.py](outage/truth_job.py). The job reuses the
+  stage-1 trip rule unchanged.
+- Results: `docs/truth.md`.
+
 **Stage 2, temp-1:** how much more often do coal and gas units trip in the cold? This asks for the
 hourly trip hazard of every CEMS unit from 2016 to 2025 by the air temperature at the nearest NOAA
 station. So far this temperature dependence has been measured only from confidential GADS data (Murphy,
@@ -47,10 +59,10 @@ before the standard (Uri to Elliott) and after it (Elliott to January 2025 and t
 Every prediction will be reported as held, failed or not scorable.
 
 Data: Catalyst Cooperative's [PUDL](https://catalyst.coop/pudl/) build of EPA CEMS and EIA-860 (CC BY 4.0);
-NOAA ISD-Lite station temperatures (AWS Open Data).
+NOAA ISD-Lite station temperatures (AWS Open Data); ERCOT's public February 2021 unit outage file.
 
-Run the tests: `python outage/test_outage_core.py`, `python outage/test_repeat_core.py` and
-`python outage/test_temp_core.py` (needs `numpy`).
+Run the tests: `python outage/test_outage_core.py`, `python outage/test_truth_core.py`,
+`python outage/test_repeat_core.py` and `python outage/test_temp_core.py` (needs `numpy`).
 Run the stage-1 job (needs `pyarrow`, `numpy` and internet):
 `python outage/outage_job.py --data-dir data --out-dir out`.
 
